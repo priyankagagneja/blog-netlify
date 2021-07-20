@@ -13,7 +13,7 @@ tags:
 Credits first: 
 Thanks @jonthegeek for this [article](http://jonthegeek.com/2018/02/27/blogging-in-ten-minutes/) and for the inspiration to get me started with my blog yay!! This is by far the best article I have related to achieve any data related tasks without making (almost) no mistakes/errors. 
 
-Thanks also to Nick Strayer, Bryan Jenks and Mitchelle Harold and all those involved with the 2 packages I am going to write about in the rest of the blog. 
+Thanks also to Nick Strayer, Bryan Jenks and Mitchell O'Hara-Wild and all those involved with the 2 packages I am going to write about in the rest of the blog. 
 
 Now to the actual post on how to create your cv/resume through an automated process: 
 
