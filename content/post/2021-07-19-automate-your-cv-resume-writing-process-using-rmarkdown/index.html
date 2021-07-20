@@ -1,0 +1,64 @@
+---
+title: Automate your CV/Resume writing process (using RMarkdown)
+author: Priyanka
+date: '2021-07-19'
+slug: automate-your-cv-resume-writing-process-using-rmarkdown
+categories:
+  - R
+tags:
+  - R Markdown, CV, {vitae},{datadrivencv}
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<p>Credits first:
+Thanks <span class="citation">@jonthegeek</span> for this <a href="http://jonthegeek.com/2018/02/27/blogging-in-ten-minutes/">article</a> for the inpiration to get me started with my blog yay!! This is by far the best article I have used to achieve any data related tasks without making almost no mistakes/errors.</p>
+<p>Thanks also to Nick Strayer, Bryan Jenks and Mitchelle Harold and all those involved with the 2 packages I am going to write about in the rest of the blog.</p>
+<p>Now to the actual post on how to create your cv/resume through an automated process:</p>
+<p>So when I started working on mine I came across 2 options to do this:</p>
+<ol style="list-style-type: decimal">
+<li><p><a href="https://cran.r-project.org/web/packages/vitae/vignettes/vitae.html">{vitae}</a></p></li>
+<li><p><a href="http://nickstrayer.me/datadrivencv/">{datadrivencv}</a></p></li>
+</ol>
+<p>There were a few blog posts I could find using each. The idea is to have a central place where you want to add/edit your career updates only in a simple text format and not have to deal with formatting issues (which you would otherwise face, almost everytime if you are working on any word software).</p>
+<p>With my first reading of both, I liked and started working through <a href="https://livefreeordichotomize.com/2019/09/04/building_a_data_driven_cv_with_r">Nick’s article</a>. However, I ran into certain issues:<br />
+1. the files I downloaded did not exactly match with what were used in the article (they must have been updated at some point, the github link has 86 commits after all).
+2. the two .R files (CV_printing_functions.R, render_cv.R) had lots of code to go through to make changes to make it yours.
+3. (main culprit why I quit) after i created copy of my googlesheet, I ran into authentication issues which I could resolve if I run the code to read data file in console but not through the code functions. So that was a bummer, i made progress with inputs from wonderful R4DS community however since I was in rush of getting my automated CV out I moved on to trying the {vitae} approach.</p>
+<p>So, here’s a run-down of what I did to get to this automated resume on mine, available here for <a href="https://github.com/priyankagagneja/cv-automation-in-r/blob/master/Priyanka_Gagneja_CV.pdf">sample</a></p>
+<ol style="list-style-type: decimal">
+<li>Download the package {vitae} e.g.:</li>
+</ol>
+<pre class="r"><code>install.packages(&#39;vitae&#39;)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li><p>Install tinytex as this <a href="https://pkg.mitchelloharawild.com/vitae/">article</a> says. I had this already, so I moved to the next step (hoping that i would be up &amp; running sooner than anybody else… duh!!).</p></li>
+<li><p>I copied 2 files (bare minimum requirements I think!) from Bryan Jenks’s CV repo <a href="https://github.com/tallguyjenks/CV">here</a> or you could use mine <a href="https://github.com/priyankagagneja/cv-automation-in-r">here</a> (i did not create a folder structure as I intentionally kept it minimal code) for a cleaner version - <code>CV.Rmd</code> and <code>r/data.R</code></p></li>
+<li><p>You could simply test by knitting the CV.Rmd as it is.</p></li>
+<li><p>You may find some knitting errors relating to LaTex. I had to install xelatex (Basic Tex for Mac) hence from <a href="http://www.texts.io/support/0001/">here</a> and the links i used for it were:</p></li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Start with this command (source: <a href="https://gist.github.com/peterhurford/75957ba9335e755013b87254ec85fab1">here</a>)</li>
+</ol>
+<pre class="r"><code>sudo tlmgr update --self</code></pre>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Followed by installing any package or .sty files errors you would get. For e.g.:</li>
+</ol>
+<pre class="r"><code>sudo tlmgr install enumitem</code></pre>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>In some cases, the name of .sty file will not match with the package needed exactly, in which you would need to <a href="https://bookdown.org/yihui/rmarkdown-cookbook/install-latex-pkgs.html">identify the package</a> using</li>
+</ol>
+<pre class="r"><code># use the `text` argument
+tinytex::parse_packages(
+  text = &quot;! LaTeX Error: File `ocgbase.sty&#39; not found.&quot;   # replace ocgbase with whatever file is missing for you
+)
+# it should return &quot;ocgx2&quot;`</code></pre>
+<p>and then install that identified package in your terminal.</p>
+<pre class="r"><code>sudo tlmgr install ocgx2</code></pre>
+<ol start="6" style="list-style-type: decimal">
+<li><p>Once all of these errors are sorted, you are pretty much set. Edit the files <code>data.R</code> and <code>CV.Rmd</code> with your information. This setup mainly uses 2 functions <code>detailed_entries()</code> and <code>brief_entries()</code>. If you see my CV you may notice I played around with the what,where, why arguments a little bit to get the aesthetics I wanted for my CV.</p></li>
+<li><p>I did not have this step but for the academicians(Cath this is for you), there might be an additional step of using additional function <code>bibliography_entries()</code>. <a href="https://pkg.mitchelloharawild.com/vitae/">Package documentation</a> also has examples on connecting with your orcid id such that it can always access the most recent state of your publications.</p></li>
+</ol>
+<p>When/If you try to change the output format, you may encounter some more missing .sty files and you can go back to step 5(c) and that should be it.</p>
+<p>I hope this was useful and less taxing for atleast some people here in R community.
+Happy to take any feedback/comments/questions!!</p>

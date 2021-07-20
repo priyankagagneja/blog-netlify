@@ -1,0 +1,81 @@
+---
+title: Automate your CV/Resume writing process (using RMarkdown)
+author: Priyanka
+date: '2021-07-19'
+slug: automate-your-cv-resume-writing-process-using-rmarkdown
+categories:
+  - R
+tags:
+  - R Markdown, CV, {vitae},{datadrivencv}
+---
+
+
+Credits first: 
+Thanks @jonthegeek for this [article](http://jonthegeek.com/2018/02/27/blogging-in-ten-minutes/) for the inpiration to get me started with my blog yay!! This is by far the best article I have used to achieve any data related tasks without making almost no mistakes/errors. 
+
+Thanks also to Nick Strayer, Bryan Jenks and Mitchelle Harold and all those involved with the 2 packages I am going to write about in the rest of the blog. 
+
+Now to the actual post on how to create your cv/resume through an automated process: 
+
+So when I started working on mine I came across 2 options to do this: 
+
+1. [{vitae}](https://cran.r-project.org/web/packages/vitae/vignettes/vitae.html)
+
+2. [{datadrivencv}](http://nickstrayer.me/datadrivencv/)
+
+There were a few blog posts I could find using each. The idea is to have a central place where you want to add/edit your career updates only in a simple text format and not have to deal with formatting issues (which you would otherwise face, almost everytime if you are working on any word software).
+
+With my first reading of both, I liked and started working through [Nick's article](https://livefreeordichotomize.com/2019/09/04/building_a_data_driven_cv_with_r). However, I ran into certain issues:    
+1. the files I downloaded did not exactly match with what were used in the article (they must have been updated at some point, the github link has 86 commits after all).
+2. the two .R files (CV_printing_functions.R, render_cv.R) had lots of code to go through to make changes to make it yours.
+3. (main culprit why I quit) after i created  copy of my googlesheet, I ran into authentication issues which I could resolve if I run the code to read data file in console but not through the code functions. So that was a bummer, i made progress with inputs from wonderful R4DS community however since I was in rush of getting my automated CV out I moved on to trying the {vitae} approach.
+
+So, here's a run-down of what I did to get to this automated resume on mine, available here for [sample](https://github.com/priyankagagneja/cv-automation-in-r/blob/master/Priyanka_Gagneja_CV.pdf) 
+
+1. Download the package {vitae} e.g.:
+```{r, eval=FALSE, include=TRUE}
+install.packages('vitae')
+```
+
+2. Install tinytex as this [article](https://pkg.mitchelloharawild.com/vitae/) says. I had this already, so I moved to the next step (hoping that i would be up & running sooner than anybody else... duh!!).
+
+3. I copied 2 files (bare minimum requirements I think!) from Bryan Jenks's CV repo [here](https://github.com/tallguyjenks/CV) or you could use mine [here](https://github.com/priyankagagneja/cv-automation-in-r) (i did not create a folder structure as I intentionally kept it minimal code) for a cleaner version - `CV.Rmd` and `r/data.R`
+
+4. You could simply test by knitting the CV.Rmd as it is. 
+
+5. You may find some knitting errors relating to LaTex. I had to install xelatex (Basic Tex for Mac) hence from [here](http://www.texts.io/support/0001/) and the links i used for it were: 
+
+(a) Start with this command (source: [here](https://gist.github.com/peterhurford/75957ba9335e755013b87254ec85fab1))
+```{r, eval=FALSE, include=TRUE}
+sudo tlmgr update --self
+```
+
+(b) Followed by installing any package or .sty files errors you would get. For e.g.: 
+
+```{r, eval=FALSE, include=TRUE}
+sudo tlmgr install enumitem
+```
+
+(c) In some cases, the name of .sty file will not match with the package needed exactly, in which you would need to [identify the package](https://bookdown.org/yihui/rmarkdown-cookbook/install-latex-pkgs.html) using 
+```{r, eval=FALSE, include=TRUE} 
+# use the `text` argument
+tinytex::parse_packages(
+  text = "! LaTeX Error: File `ocgbase.sty' not found."   # replace ocgbase with whatever file is missing for you
+)
+# it should return "ocgx2"`
+```
+
+and then install that identified package in your terminal. 
+```{r, eval=FALSE, include=TRUE}
+sudo tlmgr install ocgx2
+```
+
+6. Once all of these errors are sorted, you are pretty much set. Edit the files `data.R` and `CV.Rmd` with your information. This setup mainly uses 2 functions `detailed_entries()` and `brief_entries()`. If you see my CV you may notice I played around with the what,where, why arguments a little bit to get the aesthetics I wanted for my CV. 
+
+7. I did not have this step but for the academicians(Cath this is for you), there might be an additional step of using additional function `bibliography_entries()`. [Package documentation](https://pkg.mitchelloharawild.com/vitae/) also has examples on connecting with your orcid id such that it can always access the most recent state of your publications. 
+
+When/If you try to change the output format, you may encounter some more missing .sty files and you can go back to step 5(c) and that should be it. 
+
+I hope this was useful and less taxing for atleast some people here in R community. 
+Happy to take any feedback/comments/questions!!
+
