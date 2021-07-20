@@ -11,7 +11,7 @@ tags:
 
 
 Credits first: 
-Thanks @jonthegeek for this [article](http://jonthegeek.com/2018/02/27/blogging-in-ten-minutes/) for the inpiration to get me started with my blog yay!! This is by far the best article I have used to achieve any data related tasks without making almost no mistakes/errors. 
+Thanks @jonthegeek for this [article](http://jonthegeek.com/2018/02/27/blogging-in-ten-minutes/) and for the inspiration to get me started with my blog yay!! This is by far the best article I have related to achieve any data related tasks without making (almost) no mistakes/errors. 
 
 Thanks also to Nick Strayer, Bryan Jenks and Mitchelle Harold and all those involved with the 2 packages I am going to write about in the rest of the blog. 
 
@@ -26,8 +26,11 @@ So when I started working on mine I came across 2 options to do this:
 There were a few blog posts I could find using each. The idea is to have a central place where you want to add/edit your career updates only in a simple text format and not have to deal with formatting issues (which you would otherwise face, almost everytime if you are working on any word software).
 
 With my first reading of both, I liked and started working through [Nick's article](https://livefreeordichotomize.com/2019/09/04/building_a_data_driven_cv_with_r). However, I ran into certain issues:    
+
 1. the files I downloaded did not exactly match with what were used in the article (they must have been updated at some point, the github link has 86 commits after all).
+
 2. the two .R files (CV_printing_functions.R, render_cv.R) had lots of code to go through to make changes to make it yours.
+
 3. (main culprit why I quit) after i created  copy of my googlesheet, I ran into authentication issues which I could resolve if I run the code to read data file in console but not through the code functions. So that was a bummer, i made progress with inputs from wonderful R4DS community however since I was in rush of getting my automated CV out I moved on to trying the {vitae} approach.
 
 So, here's a run-down of what I did to get to this automated resume on mine, available here for [sample](https://github.com/priyankagagneja/cv-automation-in-r/blob/master/Priyanka_Gagneja_CV.pdf) 
