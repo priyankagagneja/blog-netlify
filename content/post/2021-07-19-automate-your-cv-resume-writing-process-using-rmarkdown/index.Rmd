@@ -11,11 +11,11 @@ tags:
 
 
 Credits first: 
-Thanks @jonthegeek for this [article](http://jonthegeek.com/2018/02/27/blogging-in-ten-minutes/) and for the inspiration to get me started with my blog yay!! This is by far the best article I have related to achieve any data related tasks without making (almost) no mistakes/errors. 
+Thanks @jonthegeek for this [article](http://jonthegeek.com/2018/02/27/blogging-in-ten-minutes/) and for the inspiration to get me started with my blog yay!! This is by far the best article I have read related to achieving any data related tasks without making (almost) any mistakes/errors. 
 
 Thanks also to Nick Strayer, Bryan Jenks and Mitchell O'Hara-Wild and all those involved with the 2 packages I am going to write about in the rest of the blog. 
 
-Now to the actual post on how to create your cv/resume through an automated process: 
+Now to the actual post on how to **create your cv/resume through an automated process**: 
 
 So when I started working on mine I came across 2 options to do this: 
 
