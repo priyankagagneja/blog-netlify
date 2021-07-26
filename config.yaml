@@ -34,7 +34,7 @@ params:
   logo:
     alt: Logo
     height: 50
-    url: /resources/_gen/images/Priyanka.png
+    url: //resources/_gen/images/Priyanka.png
     width: 50
 markup:
   defaultMarkdownHandler: goldmark
