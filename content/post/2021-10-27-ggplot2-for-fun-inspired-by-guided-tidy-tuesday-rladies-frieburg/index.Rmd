@@ -1,0 +1,162 @@
+---
+title: ggplot2 for fun 
+subtitle: Inspired by Guided Tidy Tuesday (RLadies Freiburg)
+author: R package build
+date: '2021-10-27'
+slug: ggplot2-for-fun-inspired-by-guided-tidy-tuesday-rladies-freiburg
+categories:
+  - R
+tags: []
+---
+
+Thanks [Kayla](https://twitter.com/McConnellKyla) and [Julia](https://github.com/JuliaMuellerFr) for the inspiration for this post. 
+
+I have learnt and have lots of fun with these 2 ladies in past year or so. And Oct 28, 2021 they took us through a fun activity of creating water melons and pumpkins from TidyTuesday data. 
+
+Disclaimer: this post, coding & visual below are purely for fun. So let's dig in.
+
+```{r, read-data, message=FALSE, warning=FALSE, echo=FALSE}
+library(tidyverse)
+pumpkins <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-19/pumpkins.csv')
+```
+
+More info on the data:
+https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-10-19/readme.md
+
+
+```{r}
+pumpkins_cleaned <- pumpkins %>% 
+  separate(id, c("year", "type"), sep="-") %>% 
+  mutate(
+    across(c(weight_lbs, est_weight, ott, pct_chart, place), as.numeric),
+    across(c(state_prov, country), as.factor)
+  )
+
+map_fruits <- data.frame(
+  fruit = c("Field Pumpkin", "Giant Pumpkin", "Giant Squash","Giant Watermelon", "Long Gourd", "Tomato"),
+  type = c("F", "P",  "S",  "W",  "L",  "T" )
+  )
+
+```
+
+
+
+
+```{r}
+
+pumpkins_cleaned <- pumpkins_cleaned %>% 
+  left_join(map_fruits, by = "type")
+
+pumpkins_cleaned %>% 
+  count(year,fruit) %>% 
+  pivot_wider(names_from = fruit, values_from = n)
+```
+
+
+Lets focus on tomato: 
+
+```{r}
+top_tomato_producers <- pumpkins_cleaned %>% 
+  filter(fruit == "Tomato") %>% 
+  count(country) %>% 
+  arrange(-n) %>% 
+  slice_head(n = 3) %>% 
+  pull(country)
+
+pumpkins_cleaned %>% 
+  filter(fruit == "Tomato" & country %in% top_tomato_producers) %>% 
+  group_by(year, country) %>% 
+  summarise(n = n(),
+            avg_wt = mean(weight_lbs)) %>% 
+  ggplot(aes(x = year, y = n, size = avg_wt)) + 
+  geom_point(color = "#FFA500") +               # golden color for the seeds
+  facet_wrap(~country) + 
+  theme(
+    strip.background = element_rect("darkgreen"),
+    strip.text = element_text(colour = "white"),
+    panel.background = element_rect(fill = "red"),
+    axis.title = element_blank(),
+    legend.position = "none",
+    axis.ticks = element_blank(),
+    axis.text.x = element_text(angle = 40),
+    panel.grid = element_blank()
+  ) +
+  labs(title = "Number of Tomatoes grown by country",
+       subtitle = "...by average weight (in pounds)",
+       caption = "Data source: Tidy Tuesday")
+
+
+```
+So, tomato produce has been increasing over the years in US and Germany while it's falling for Canada. Average weight of a tomato is much larger in Canada and US as compared to that in Germany.
+
+
+
+Appendix:
+
+Kayla's visual:
+
+```{r, make-watermelon}
+
+pumpkins_cleaned %>% 
+  filter(type == "W" & country == "United States") %>% 
+  group_by(state_prov) %>% 
+  summarize(weight_lbs = max(weight_lbs)) %>% 
+  top_n(15) %>% 
+  ggplot(aes(y = state_prov, x = weight_lbs, size = weight_lbs)) +
+  geom_point(color = "#646464") +
+  labs(
+    x = NULL,
+    y = NULL,
+    title = "Biggest watermelons by US state (in lbs)"
+  ) +
+  theme(
+    panel.background = element_rect(fill = "#FCD1D6"),
+    axis.line = element_line(color = "#CCF6B0", size = 3),
+    legend.position = "none",
+    panel.grid = element_blank(),
+    axis.ticks = element_blank(),
+    plot.title = element_text(face = "bold", size = 14, margin = margin(15, 0, 15, 0)),
+    plot.title.position = "plot",
+    axis.text.y = element_text(face = "bold", hjust = 0),
+    axis.text.x = element_text(face = "bold", vjust = -2)
+  )
+```
+
+
+
+
+Julia's visual:
+
+```{r, make-pumpkins}
+library(ggimage)
+
+img <- "pumpkin.png"
+
+pumpkins_cleaned %>% 
+  filter(type == "P") %>% 
+  drop_na(weight_lbs) %>% 
+  group_by(country) %>% 
+  summarise(weight_lbs = max(weight_lbs)) %>% 
+  slice_max(order_by = weight_lbs, n = 10) %>% 
+  mutate(country = fct_reorder(country, -weight_lbs)) %>% 
+  ggplot() +
+  aes(y = country, x = weight_lbs) +
+  geom_image(aes(image = "pumpkin.png"),
+             asp = 1.5) +
+  labs(x = NULL,
+       y = NULL,
+       title = "Heaviest pumpkins grown by country",
+       subtitle = "...by weight in pounds",
+       caption = "Data source: Tidy Tuesday") +
+  scale_x_continuous(breaks = seq(995, 1000, by = 1)) +
+  theme(
+    plot.background = element_rect(fill = "#d4571d"),
+    panel.background = element_rect(fill = "white"),
+    text = element_text(face = "bold", colour = "black"),
+    axis.text = element_text(colour = "black"),
+    plot.margin = margin(1, 1, 1, 1, "cm"),
+    axis.ticks = element_blank()
+  )
+
+```
+
